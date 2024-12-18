@@ -1,0 +1,43 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+ 
+public class FavSport {
+    public static void main(String[] args) {
+Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        scanner.nextLine();
+ 
+        Map<String, Integer> sportCount = new HashMap<>();
+        int footballCount = 0;
+        String mostLikedSport = "";
+        int maxCount = 0;
+ 
+        for (int i = 0; i < n; i++) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(" ");
+            String name = parts[0];
+            String sport = parts[1];
+ 
+            if (!sportCount.containsKey(sport)) {
+                sportCount.put(sport, 1);
+            } else {
+                sportCount.put(sport, sportCount.get(sport) + 1);
+            }
+ 
+            if (sport.equals("football") && sportCount.get(sport) == 1) {
+                footballCount++;
+            }
+ 
+            if (sportCount.get(sport) > maxCount || (sportCount.get(sport) == maxCount && sport.compareTo(mostLikedSport) < 0)) {
+                mostLikedSport = sport;
+                maxCount = sportCount.get(sport);
+            }
+        }
+ 
+        scanner.close();
+ 
+        System.out.println(mostLikedSport);
+        System.out.println("Football " + footballCount);
+    }
+}
