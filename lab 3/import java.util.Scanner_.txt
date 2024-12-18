@@ -1,0 +1,46 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class DelimitersMatching {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter an expression with delimiters: ");
+        String expression = scanner.nextLine();
+
+        boolean isMatched = checkDelimitersMatching(expression);
+
+        if (isMatched) {
+            System.out.println("Delimiters are properly matched.");
+        } else {
+            System.out.println("Delimiters are not properly matched.");
+        }
+    }
+
+    public static boolean checkDelimitersMatching(String expression) {
+        Stack<Character> stack = new Stack<>();
+
+        for (int i = 0; i < expression.length(); i++) {
+            char c = expression.charAt(i);
+
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else if (c == ')' || c == ']' || c == '}') {
+                if (stack.isEmpty()) {
+                    return false; // Unmatched closing delimiter
+                }
+
+                char open = stack.pop();
+
+                if (!isMatchingPair(open, c)) {
+                    return false; // Mismatched opening and closing delimiter
+                }
+            }
+        }
+
+        return stack.isEmpty(); // If the stack is empty, all delimiters are matched
+    }
+
+    public static boolean isMatchingPair(char open, char close) {
+        return (open == '(' && close == ')') || (open == '[' && close == ']') || (open == '{' && close == '}');
+    }
+}

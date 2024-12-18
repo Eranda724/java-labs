@@ -1,0 +1,42 @@
+import java.util.LinkedList;
+
+public class List1 {
+    public static void main(String[] args) {
+        LinkedList<String> list = new LinkedList<>();
+
+        list.push("dog");
+        list.push("cat");
+        list.push("elephant");
+        list.offer("cow");
+        list.push("bird");
+
+        list.poll();
+        list.pop();
+
+        System.out.println("Current List: " + list);
+
+        list.add(3, "monkey");
+
+        list.remove("dog");
+
+        System.out.println("Index of 'dog': " + list.indexOf("dog"));
+
+        System.out.println("Current List: " + list);
+
+        System.out.println("Peek First: " + list.peekFirst());
+        System.out.println("Peek Last: " + list.peekLast());
+
+        list.addFirst("car");
+        list.addLast("van");
+
+        System.out.println("Updated List: " + list);
+
+        String first = list.removeFirst();
+        String last = list.removeLast();
+
+        System.out.println("Final List: " + list);
+
+        System.out.println("Removed First: " + first);
+        System.out.println("Removed Last: " + last);
+    }
+}

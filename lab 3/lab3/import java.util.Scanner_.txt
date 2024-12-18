@@ -1,0 +1,97 @@
+import java.util.Scanner;
+
+public class RecursiveProblems {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // (a) Triangular Number
+        System.out.print("Enter a number to calculate its triangular number: ");
+        int triNumInput = scanner.nextInt();
+        int triNumResult = calculateTriangularNumber(triNumInput);
+        System.out.println("Triangular number of " + triNumInput + " is " + triNumResult);
+
+        // (b) Factorial
+        System.out.print("Enter a number to calculate its factorial: ");
+        int factorialInput = scanner.nextInt();
+        int factorialResult = calculateFactorial(factorialInput);
+        System.out.println("Factorial of " + factorialInput + " is " + factorialResult);
+
+        scanner.nextLine(); // Consume newline character
+
+        // (c) Anagrams
+        System.out.print("Enter the first string: ");
+        String str1 = scanner.nextLine();
+        System.out.print("Enter the second string: ");
+        String str2 = scanner.nextLine();
+
+        boolean areAnagrams = areAnagrams(str1, str2);
+        if (areAnagrams) {
+            System.out.println(str1 + " and " + str2 + " are anagrams.");
+        } else {
+            System.out.println(str1 + " and " + str2 + " are not anagrams.");
+        }
+
+        // (d) Towers of Hanoi
+        System.out.print("Enter the number of disks for Towers of Hanoi: ");
+        int numDisks = scanner.nextInt();
+        towersOfHanoi(numDisks, 'A', 'C', 'B');
+
+        scanner.close();
+    }
+
+    // (a) Triangular Number
+    public static int calculateTriangularNumber(int n) {
+        if (n <= 0) {
+            return 0;
+        } else {
+            return n + calculateTriangularNumber(n - 1);
+        }
+    }
+
+    // (b) Factorial
+    public static int calculateFactorial(int n) {
+        if (n == 0 || n == 1) {
+            return 1;
+        } else {
+            return n * calculateFactorial(n - 1);
+        }
+    }
+
+    // (c) Anagrams
+    public static boolean areAnagrams(String str1, String str2) {
+        str1 = str1.toLowerCase();
+        str2 = str2.toLowerCase();
+
+        // Base case
+        if (str1.length() != str2.length()) {
+            return false;
+        }
+
+        if (str1.length() == 0) {
+            return true;
+        }
+
+        char firstChar = str1.charAt(0);
+        int index = str2.indexOf(firstChar);
+
+        if (index == -1) {
+            return false;
+        } else {
+            String newStr1 = str1.substring(1);
+            String newStr2 = str2.substring(0, index) + str2.substring(index + 1);
+            return areAnagrams(newStr1, newStr2);
+        }
+    }
+
+    // (d) Towers of Hanoi
+    public static void towersOfHanoi(int numDisks, char source, char destination, char auxiliary) {
+        if (numDisks == 1) {
+            System.out.println("Move disk 1 from " + source + " to " + destination);
+            return;
+        }
+
+        towersOfHanoi(numDisks - 1, source, auxiliary, destination);
+        System.out.println("Move disk " + numDisks + " from " + source + " to " + destination);
+        towersOfHanoi(numDisks - 1, auxiliary, destination, source);
+    }
+}
