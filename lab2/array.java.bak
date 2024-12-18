@@ -1,0 +1,71 @@
+import java.util.Scanner;
+
+public class ArrayOperations {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int[] array = new int[20];
+
+        for (int i = 0; i < 20; i++) {
+            System.out.print("Enter element " + (i + 1) + ": ");
+            array[i] = sc.nextInt();
+        }
+
+        System.out.print("Enter the value of i: ");
+        int i = sc.nextInt();
+        System.out.print("Enter the value of j: ");
+        int j = sc.nextInt();
+        if (i >= 0 && i < 20 && j >= 0 && j < 20) {
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        } else {
+            System.out.println("Invalid i or j values. Both i and j should be between 0 and 19.");
+        }
+
+        System.out.print("Enter the value of k for element retrieval: ");
+        int k = sc.nextInt();
+        if (k >= 0 && k < 20) {
+            System.out.println("The " + k + "th element of the array is: " + array[k]);
+        } else {
+            System.out.println("Invalid k value. k should be between 0 and 19.");
+        }
+
+        System.out.print("Enter the value of k for element deletion: ");
+        k = sc.nextInt();
+        if (k >= 0 && k < 20) {
+            for (int index = k; index < 19; index++) {
+                array[index] = array[index + 1];
+            }
+            array[19] = 0;
+            System.out.println("The " + k + "th element has been deleted.");
+        } else {
+            System.out.println("Invalid k value. k should be between 0 and 19.");
+        }
+
+        
+        System.out.print("Enter a new element to insert: ");
+        int newElement = sc.nextInt();
+        array[19] = newElement;
+
+        
+        System.out.print("Enter an element to search for: ");
+        int searchElement = sc.nextInt();
+        boolean found = false;
+        for (int index = 0; index < 20; index++) {
+            if (array[index] == searchElement) {
+                System.out.println("Element " + searchElement + " found at index " + index + ".");
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Element " + searchElement + " not found in the array.");
+        }
+
+        System.out.print("Updated array: ");
+        for (int element : array) {
+            System.out.print(element + " ");
+        }
+    }
+}

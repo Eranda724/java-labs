@@ -1,0 +1,114 @@
+import java.util.Scanner;
+
+class MyArray {
+    private int[] array;
+    private int size;
+
+    public MyArray(int size) {
+        this.size = size;
+        this.array = new int[size];
+    }
+
+    public void readElements(Scanner scanner) {
+        System.out.println("Enter " + size + " elements for the array:");
+        for (int i = 0; i < size; i++) {
+            System.out.print("Enter element " + (i + 1) + ": ");
+            array[i] = scanner.nextInt();
+        }
+    }
+
+    public void printArray() {
+        System.out.print("Array: ");
+        for (int i = 0; i < size; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public void interchangeElements(int i, int j) {
+        if (i >= 0 && i < size && j >= 0 && j < size) {
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+            System.out.println("Elements at positions " + i + " and " + j + " interchanged.");
+        } else {
+            System.out.println("Invalid values for i and j.");
+        }
+    }
+
+    public void printElementAtIndex(int index) {
+        if (index >= 0 && index < size) {
+            System.out.println("Element at index " + index + ": " + array[index]);
+        } else {
+            System.out.println("Invalid index.");
+        }
+    }
+
+    public void deleteElementAtIndex(int index) {
+        if (index >= 0 && index < size) {
+            for (int i = index; i < size - 1; i++) {
+                array[i] = array[i + 1];
+            }
+            array[size - 1] = 0; // Set the last element to 0
+            System.out.println("Element at index " + index + " deleted.");
+        } else {
+            System.out.println("Invalid index for deletion.");
+        }
+    }
+
+    public void insertElementAtIndex(int index, int element) {
+        if (index >= 0 && index < size) {
+            for (int i = size - 1; i > index; i--) {
+                array[i] = array[i - 1];
+            }
+            array[index] = element;
+            System.out.println("Element " + element + " inserted at index " + index + ".");
+        } else {
+            System.out.println("Invalid index for insertion.");
+        }
+    }
+
+    public void searchElement(int target) {
+        boolean found = false;
+        for (int i = 0; i < size; i++) {
+            if (array[i] == target) {
+                System.out.println("Element " + target + " found at index " + i + ".");
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Element " + target + " not found in the array.");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the size of the array: ");
+        int size = scanner.nextInt();
+
+        MyArray myArray = new MyArray(size);
+
+        myArray.readElements(scanner);
+        myArray.printArray();
+
+        myArray.interchangeElements(2, 4);
+        myArray.printArray();
+
+        myArray.printElementAtIndex(3);
+
+        myArray.deleteElementAtIndex(1);
+        myArray.printArray();
+
+        myArray.insertElementAtIndex(0, 99);
+        myArray.printArray();
+
+        System.out.print("Enter an element to search for: ");
+        int target = scanner.nextInt();
+        myArray.searchElement(target);
+
+        scanner.close();
+    }
+}
