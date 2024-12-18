@@ -1,0 +1,35 @@
+import java.util.PriorityQueue;
+
+public class MaximizeArraySum {
+    public static int maximizeArraySum(int[] A, int k) {
+        // Create a min-heap
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+        // Insert all elements of the array A into the min-heap
+        for (int num : A) {
+            minHeap.offer(num);
+        }
+
+        // Perform k negations
+        for (int i = 0; i < k; i++) {
+            // Pop the smallest element, negate it, and push it back
+            int smallest = minHeap.poll();
+            minHeap.offer(-smallest);
+        }
+
+        // Calculate the sum of the modified array
+        int arraySum = 0;
+        for (int num : minHeap) {
+            arraySum += num;
+        }
+
+        return arraySum;
+    }
+
+    public static void main(String[] args) {
+        int[] A = {4, 2, 3};
+        int k = 2;
+        int result = maximizeArraySum(A, k);
+        System.out.println("Maximum array sum after " + k + " negations: " + result);
+    }
+}

@@ -1,0 +1,158 @@
+class City {
+    String name;
+    double latitude;
+    double longitude;
+
+    public City(String name, double latitude, double longitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+}
+
+class Node {
+    City city;
+    Node left, right;
+
+    public Node(City city) {
+        this.city = city;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class CityDatabase {
+    private Node root;
+
+    public void insert(City city) {
+        root = insertRec(root, city);
+    }
+
+    private Node insertRec(Node root, City city) {
+        if (root == null) {
+            root = new Node(city);
+            return root;
+        }
+
+        if (city.name.compareTo(root.city.name) < 0) {
+            root.left = insertRec(root.left, city);
+        } else if (city.name.compareTo(root.city.name) > 0) {
+            root.right = insertRec(root.right, city);
+        }
+
+        return root;
+    }
+
+    public void delete(String cityName) {
+        root = deleteRec(root, cityName);
+    }
+
+    private Node deleteRec(Node root, String cityName) {
+        if (root == null) return root;
+
+        if (cityName.compareTo(root.city.name) < 0) {
+            root.left = deleteRec(root.left, cityName);
+        } else if (cityName.compareTo(root.city.name) > 0) {
+            root.right = deleteRec(root.right, cityName);
+        } else {
+            if (root.left == null) return root.right;
+            else if (root.right == null) return root.left;
+
+            root.city = minValue(root.right).city;
+            root.right = deleteRec(root.right, root.city.name);
+        }
+        return root;
+    }
+
+    private Node minValue(Node root) {
+        Node current = root;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
+
+    public City search(String cityName) {
+        Node result = searchRec(root, cityName);
+        return result != null ? result.city : null;
+    }
+
+    private Node searchRec(Node root, String cityName) {
+        if (root == null || root.city.name.equals(cityName)) {
+            return root;
+        }
+
+        if (cityName.compareTo(root.city.name) < 0) {
+            return searchRec(root.left, cityName);
+        } else {
+            return searchRec(root.right, cityName);
+        }
+    }
+
+    public void printDescendingOrder() {
+        printDescending(root);
+    }
+
+    private void printDescending(Node root) {
+        if (root != null) {
+            printDescending(root.right);
+            System.out.println(root.city.name + ", " + root.city.latitude + ", " + root.city.longitude);
+            printDescending(root.left);
+        }
+    }
+
+    public void printCitiesWithinDistance(double latitude, double longitude, double distance) {
+        printCitiesWithinDistanceRec(root, latitude, longitude, distance);
+    }
+
+    private void printCitiesWithinDistanceRec(Node root, double latitude, double longitude, double distance) {
+        if (root != null) {
+            printCitiesWithinDistanceRec(root.left, latitude, longitude, distance);
+            if (calculateDistance(root.city.latitude, root.city.longitude, latitude, longitude) <= distance) {
+                System.out.println(root.city.name + ", " + root.city.latitude + ", " + root.city.longitude);
+            }
+            printCitiesWithinDistanceRec(root.right, latitude, longitude, distance);
+        }
+    }
+
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371; // Radius of the Earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c; // distance in kilometers
+    }
+
+    public static void main(String[] args) {
+        CityDatabase cityDatabase = new CityDatabase();
+
+        cityDatabase.insert(new City("Colombo", 6.927079, 79.861244));
+        cityDatabase.insert(new City("Chicago", 41.881832, -87.623177));
+        cityDatabase.insert(new City("Sydney", -33.865143, 151.209900));
+
+        System.out.println("City records in descending order by name:");
+        cityDatabase.printDescendingOrder();
+
+        String cityNameToSearch = "Chicago";
+        System.out.println("\nSearching for " + cityNameToSearch + ":");
+        City foundCity = cityDatabase.search(cityNameToSearch);
+        if (foundCity != null) {
+            System.out.println("City found: " + foundCity.name + ", " + foundCity.latitude + ", " + foundCity.longitude);
+        } else {
+            System.out.println("City not found.");
+        }
+
+        double latitude = 40.730610;
+        double longitude = -73.935242;
+        double distance = 1000; // in kilometers
+        System.out.println("\nCities within " + distance + " km of coordinates " + latitude + ", " + longitude + ":");
+        cityDatabase.printCitiesWithinDistance(latitude, longitude, distance);
+    }
+}

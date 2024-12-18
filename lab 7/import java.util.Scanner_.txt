@@ -1,0 +1,96 @@
+import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class JungleRun {
+
+    static class Point {
+        int x, y, distance;
+
+        public Point(int x, int y, int distance) {
+            this.x = x;
+            this.y = y;
+            this.distance = distance;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the size of the matrix (N): ");
+        int n = scanner.nextInt();
+        scanner.nextLine();  // Consume the newline character
+
+        char[][] matrix = new char[n][n];
+
+        // Input jungle map
+        System.out.println("Enter the jungle map (use S for start, E for end, T for tree, P for path): ");
+        for (int i = 0; i < n; i++) {
+            String line = scanner.nextLine();
+            matrix[i] = line.toCharArray();
+        }
+
+        int result = jungleRun(matrix);
+        System.out.println("Minimum number of moves from S to E: " + result);
+    }
+
+    static int jungleRun(char[][] matrix) {
+        int n = matrix.length;
+
+        // Find the start point
+        Point start = findStart(matrix, n);
+
+        // Initialize a queue
+        Queue<Point> queue = new LinkedList<>();
+        queue.add(start);
+
+        // Create a set to keep track of visited points
+        boolean[][] visited = new boolean[n][n];
+
+        // Perform BFS
+        while (!queue.isEmpty()) {
+            Point currentPoint = queue.poll();
+
+            // Check if the current point is the destination
+            if (matrix[currentPoint.x][currentPoint.y] == 'E') {
+                return currentPoint.distance;
+            }
+
+            // Mark the current point as visited
+            visited[currentPoint.x][currentPoint.y] = true;
+
+            // Explore neighbors
+            exploreNeighbours(matrix, queue, visited, currentPoint);
+        }
+
+        // No path found
+        return -1;
+    }
+
+    static Point findStart(char[][] matrix, int n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 'S') {
+                    return new Point(i, j, 0);
+                }
+            }
+        }
+        return null; // Handle error (start point not found)
+    }
+
+    static void exploreNeighbours(char[][] matrix, Queue<Point> queue, boolean[][] visited, Point currentPoint) {
+        int[] dx = {-1, 0, 1, 0}; // Possible movements in x-axis (North, East, South, West)
+        int[] dy = {0, 1, 0, -1}; // Possible movements in y-axis
+
+        for (int i = 0; i < 4; i++) {
+            int newX = currentPoint.x + dx[i];
+            int newY = currentPoint.y + dy[i];
+
+            // Check if the neighbor is within bounds and not visited
+            if (newX >= 0 && newX < matrix.length && newY >= 0 && newY < matrix[0].length
+                    && !visited[newX][newY] && matrix[newX][newY] != 'T') {
+                queue.add(new Point(newX, newY, currentPoint.distance + 1));
+            }
+        }
+    }
+}
